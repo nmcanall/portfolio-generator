@@ -33,7 +33,10 @@ const promptUser = () => {
 }; 
 
 // Prompt user for project information
-const promptProject = () => {
+const promptProject = portfolioData => {
+    if(!portfolioData.projects) {
+        portfolioData.projects = [];
+    }
     console.log(`
 =================
 Add a New Project
@@ -57,6 +60,11 @@ Add a New Project
             choices: ["JavaScript", "HTML", "CSS", "ES6", "jQuery", "Bootstrap", "Node"]
         },
         {
+          type: "input",
+          name: "link",
+          message: "Enter the GitHub link to your project. (Required)"
+        },
+        {
             type: "confirm",
             name: "feature",
             message: "Would you like this to feature this project?",
@@ -68,10 +76,19 @@ Add a New Project
             message: "Would you like to enter another project?",
             default: false
         }
-    ]);
+    ])
+    .then(projectData => {
+        portfolioData.projects.push(projectData);
+        if(projectData.confirmAddProject) {
+            return promptProject(portfolioData);
+        }
+        else {
+            return portfolioData;
+        }
+    });
 };
 
 promptUser()
-    .then(answers => console.log(answers))
+    // .then(answers => console.log(answers))
     .then(promptProject)
-    .then(projectAnswers => console.log(projectAnswers));
+    .then(portfolioData => console.log(portfolioData));
