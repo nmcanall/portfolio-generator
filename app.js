@@ -1,14 +1,5 @@
-// const fs = require("fs");
-// const generatePage = require("./src/page-template.js");
-// const profileDataArgs = process.argv.slice(2, process.argv.length);
-// const [name, github] = profileDataArgs;
-
-// fs.writeFile("index.html", generatePage(name, github), err => {
-//     if(err) throw err;
-
-//     console.log("Portfolio complete!");
-// })
-
+const fs = require("fs");
+const generatePage = require("./src/page-template.js");
 const inquirer = require("inquirer");
 
 // Prompt user for profile information
@@ -143,4 +134,12 @@ Add a New Project
 promptUser()
     // .then(answers => console.log(answers))
     .then(promptProject)
-    .then(portfolioData => console.log(portfolioData));
+    .then(portfolioData => {
+        const pageHTML = generatePage(portfolioData);
+
+        fs.writeFile("./index.html", pageHTML, err => {
+            if(err) throw new Error(err);
+            
+            console.log("Page created!");
+        })
+    });
